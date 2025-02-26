@@ -16,18 +16,6 @@ class Post extends Model
     protected $table = 'posts';
     protected $guarded = [];
 
-//    protected $fillable = [
-//        'title',
-//        'slug',
-//        'description',
-//        'view_count',
-//        'is_public',
-//        'is_published',
-//        'is_deleted',
-//        'user_id',
-//        'post_id',
-//    ];
-
     protected static function boot(): void
     {
         parent::boot();

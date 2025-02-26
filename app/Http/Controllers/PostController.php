@@ -3,24 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use App\Models\PostTag;
 use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function index() {
-        $post1 = Post::find(1);
-        dump($post1);
-        $posts = Post::where('user_id', 2)->get();
-        dump($posts);
-        $posts = Post::all();
-        dump($posts);
-        $post_tags = PostTag::where('post_id', 2)->get();
-        dump($post_tags);
-        return view('posts', compact('posts', 'post1'));
-    }
 
     public function personal_blog()
     {
@@ -30,62 +19,107 @@ class PostController extends Controller
         return view('personal-blog', compact('posts', 'tags',));
     }
 
+    public function view_posts()
+    {
+        $query = request()->query();
+        $posts = Post::where('post_id', null);
+        $tag_id = null;
+        $user_id = null;
+        if (array_key_exists("user", $query) && !!$query["user"]) {
+            $user_id = $query["user"];
+            $posts = $posts->where('user_id', $user_id);
+        }
+        if (array_key_exists("tag", $query) && !!$query["tag"]) {
+            $tag_id = $query["tag"];
+            $posts = $posts->whereHas('tags', fn($q) => $q->where('tag_id', $tag_id));
+        }
+        $posts = $posts->get();
+        $tags = Tag::all();
+        $users = User::all();
+
+        return view('view-posts', compact('posts', 'users', 'tags', 'user_id', 'tag_id'));
+    }
+
     public function store(Request $request)
     {
+        $query = $request->query();
+        $redirect_to = 'personal-blog';
+        $parameters = [];
+        if (array_key_exists("redirect_to", $query)) {
+            $redirect_to = $query["redirect_to"];
+        }
+        if (array_key_exists("query_parameters", $query)) {
+            $parameters = $query["query_parameters"];
+        }
+
         $request->validate([
             'title' => 'string',
             'description' => 'string',
         ]);
+        if (!$request->has('is_public')) {
+            $request->merge(['is_public' => 0]);
+        }
 
         Post::create([
             'title' => $request->title,
             'description' => $request->description,
+            'is_public' => !!$request->is_public,
             'user_id' => request()->user()->id,
             'post_id' => $request->post_id,
         ]);
 
-        return redirect(route('personal-blog', absolute: false));
+        return redirect(route($redirect_to, $parameters, absolute: false));
     }
 
     public function update(Request $request): RedirectResponse
     {
-        dump($request);
+        $query = $request->query();
+        $redirect_to = 'personal-blog';
+        $parameters = [];
+        if (array_key_exists("redirect_to", $query)) {
+            $redirect_to = $query["redirect_to"];
+        }
+        if (array_key_exists("query_parameters", $query)) {
+            $parameters = $query["query_parameters"];
+        }
 
-        return redirect(route('personal-blog', absolute: false));
+        if (!$request->has('is_public')) {
+            $request->merge(['is_public' => 0]);
+        }
+        $post1 = Post::where('id', $request->id)->get()->first();
+        if ($post1) {
+            $post1->title = $request->title;
+            $post1->description = $request->description;
+            $post1->is_public = !!$request->is_public;
+
+            $post1->save();
+        }
+
+        return redirect(route($redirect_to, $parameters, absolute: false));
     }
 
     public function destroy(Request $request): RedirectResponse
     {
-        dump($request);
-
-        return redirect(route('personal-blog', absolute: false));
-    }
-
-    public function createMMMMMMM()
-    {
-        $postsArr = [
-            [
-                'title' => 'YYYYyyyyRRRrrrr',
-                'description' => 'rtyrtyrtyrtyrty rtyrtyrt rsd sdsd dsdsdsd sd sd  ds dty ryrt rty rtyryrty rty',
-                'user_id' => 1,
-            ],
-            [
-                'title' => 'YYYYyyyyRRRrrTTtttttRREeeeEEeerr',
-                'description' => 'rtyrtyrtyrtyrty rtyrtyrt rsd sdsd dsdsdsd sd sd  ds dty ryrt rty rtyryrty rty fgd jukk  uykjukuiku uk uk ',
-                'user_id' => 1,
-            ],
-            [
-                'title' => 'TTtttttRREeeeEEeerr',
-                'description' => 't rty rtyryrty rty fgd jukk  uykjukuiku uk uk ',
-                'user_id' => 1,
-            ],
-        ];
-        foreach ($postsArr as $post) {
-            Post::create([
-                'title' => $post['title'],
-                'description' => $post['description'],
-                'user_id' => $post['user_id'],
-            ]);
+        $query = $request->query();
+        $redirect_to = 'personal-blog';
+        $parameters = [];
+        if (array_key_exists("redirect_to", $query)) {
+            $redirect_to = $query["redirect_to"];
         }
+        if (array_key_exists("query_parameters", $query)) {
+            $parameters = $query["query_parameters"];
+        }
+
+        $request->validate([
+            'id' => 'integer',
+        ]);
+
+        $post1 = Post::where('id', $request->id)->get()->first();
+        if ($post1) {
+            $post1->delete();
+        }
+
+        return redirect(route($redirect_to, $parameters, absolute: false));
     }
+
 }

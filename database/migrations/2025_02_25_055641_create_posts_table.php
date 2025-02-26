@@ -26,8 +26,8 @@ return new class extends Migration
             $table->index('user_id', 'post_user_idx');
             $table->index('post_id', 'parent_post_idx');
 
-            $table->foreign('user_id', 'post_user_fk')->references('id')->on('users');
-            $table->foreign('post_id', 'parent_post_fk')->references('id')->on('posts');
+            $table->foreign('user_id', 'post_user_fk')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('post_id', 'parent_post_fk')->references('id')->on('posts')->onDelete('cascade');
 
             $table->timestamps();
             $table->softDeletes();
