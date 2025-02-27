@@ -13,4 +13,10 @@ class UsersController extends Controller
         return view('users', compact('users'));
     }
 
+    public function user_subscriptions()
+    {
+        $users = request()->user()->user_subscriptions;
+        return view('user-subscriptions', compact('users'));
+    }
+
 }

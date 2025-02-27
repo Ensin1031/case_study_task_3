@@ -15,8 +15,11 @@
                     <x-nav-link :href="route('personal-blog')" :active="request()->routeIs('personal-blog')">
                         {{ __('Личный блог') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('user-subscriptions')" :active="request()->routeIs('user-subscriptions')">
+                        {{ __('Мои подписки') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('users')" :active="request()->routeIs('users')">
-                        {{ __('Пользователи') }}
+                        {{ __('Все пользователи') }}
                     </x-nav-link>
                     <x-nav-link :href="route('view-posts')" :active="request()->routeIs('view-posts')">
                         {{ __('Поиск') }}

@@ -4,6 +4,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostTagController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\UserSubController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -12,6 +13,10 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/users', [UsersController::class, 'index'])->name('users');
+    Route::get('/user-subscriptions', [UsersController::class, 'user_subscriptions'])->name('user-subscriptions');
+
+    Route::post('/user-sub', [UserSubController::class, 'store'])->name('user-sub.create');
+    Route::delete('/user-sub', [UserSubController::class, 'destroy'])->name('user-sub.destroy');
 
     Route::get('/view-posts', [PostController::class, 'view_posts'])->name('view-posts');
 

@@ -21,6 +21,7 @@ class PostController extends Controller
 
     public function view_posts()
     {
+        $auth_user = request()->user();
         $query = request()->query();
         $posts = Post::where('post_id', null);
         $tag_id = null;
@@ -33,7 +34,10 @@ class PostController extends Controller
             $tag_id = $query["tag"];
             $posts = $posts->whereHas('tags', fn($q) => $q->where('tag_id', $tag_id));
         }
-        $posts = $posts->get();
+        $posts = $posts->where(function ($query) use ($auth_user) {
+            $query->where('user_id', '=', $auth_user->id)
+                ->orWhere('is_public', '=', 1);
+        })->get();
         $tags = Tag::all();
         $users = User::all();
 
@@ -86,13 +90,13 @@ class PostController extends Controller
         if (!$request->has('is_public')) {
             $request->merge(['is_public' => 0]);
         }
-        $post1 = Post::where('id', $request->id)->get()->first();
-        if ($post1) {
-            $post1->title = $request->title;
-            $post1->description = $request->description;
-            $post1->is_public = !!$request->is_public;
+        $post = Post::where('id', $request->id)->get()->first();
+        if ($post) {
+            $post->title = $request->title;
+            $post->description = $request->description;
+            $post->is_public = !!$request->is_public;
 
-            $post1->save();
+            $post->save();
         }
 
         return redirect(route($redirect_to, $parameters, absolute: false));
@@ -114,9 +118,9 @@ class PostController extends Controller
             'id' => 'integer',
         ]);
 
-        $post1 = Post::where('id', $request->id)->get()->first();
-        if ($post1) {
-            $post1->delete();
+        $post = Post::where('id', $request->id)->get()->first();
+        if ($post) {
+            $post->delete();
         }
 
         return redirect(route($redirect_to, $parameters, absolute: false));
