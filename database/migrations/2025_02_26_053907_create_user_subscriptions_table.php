@@ -20,8 +20,8 @@ return new class extends Migration
             $table->index('user_id', 'user_subscription_user_idx');
             $table->index('subscription_user_id', 'user_subscription_user_subscription_user_idx');
 
-            $table->foreign('user_id', 'user_subscription_user_fk')->references('id')->on('users');
-            $table->foreign('subscription_user_id', 'user_subscription_user_subscription_user_fk')->references('id')->on('users');
+            $table->foreign('user_id', 'user_subscription_user_fk')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('subscription_user_id', 'user_subscription_user_subscription_user_fk')->references('id')->on('users')->onDelete('cascade');
 
             $table->timestamps();
         });
