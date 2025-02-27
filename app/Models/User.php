@@ -59,4 +59,9 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'user_subscriptions', 'user_id', 'subscription_user_id');
     }
 
+    public function is_user_sub(User $other_user): bool
+    {
+        return $this->user_subscriptions()->where('subscription_user_id', $other_user->id)->exists();
+    }
+
 }

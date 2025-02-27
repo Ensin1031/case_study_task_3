@@ -4,7 +4,7 @@
             <div class="flex items-center">
                 <div class="flex items-center">
                     <div class="hidden sm:flex sm:items-center sm:ms-6">
-                        <x-input-label for="user" :value="__('Пользователь')" />
+                        <x-input-label for="user" :value="'Пользователь: '" class="mr-4 text-lg font-medium text-gray-900"/>
                         <div style="width: 23rem;">
                             <select name="user" id="user" class="block w-full" style="border-radius: 5px;border: 1px solid rgb(209 213 219 / var(--tw-border-opacity, 1))">
                                 <option value="">------------</option>
@@ -19,7 +19,7 @@
                         </div>
                     </div>
                     <div class="hidden sm:flex sm:items-center sm:ms-6">
-                        <x-input-label for="tag" :value="__('Тег')" />
+                        <x-input-label for="user" :value="'Тег: '" class="mr-4 text-lg font-medium text-gray-900"/>
                         <div style="width: 23rem;">
                             <select name="tag" id="tag" class="block w-full" style="border-radius: 5px;border: 1px solid rgb(209 213 219 / var(--tw-border-opacity, 1))">
                                 <option value="">------------</option>

@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PostTag;
-use App\Models\Tag;
+use App\Models\UserSubscription;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
-class PostTagController extends Controller
+class UserSubController extends Controller
 {
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $query = $request->query();
         $redirect_to = 'personal-blog';
@@ -23,18 +22,15 @@ class PostTagController extends Controller
         }
 
         $request->validate([
-            'post_id' => 'integer',
-            'title' => 'string',
+            'subscription_user_id' => 'integer',
         ]);
 
-        $tag = Tag::firstOrCreate([
-            'title' => $request->title
-        ]);
+        $user_id = $request->user()->id;
 
-        if (count(PostTag::where('tag_id', $tag->id)->where('post_id', $request->post_id)->get()) === 0) {
-            PostTag::create([
-                'post_id' => $request->post_id,
-                'tag_id' => $tag->id,
+        if (count(UserSubscription::where('user_id', $user_id)->where('subscription_user_id', $request->subscription_user_id)->get()) === 0) {
+            UserSubscription::create([
+                'user_id' => $user_id,
+                'subscription_user_id' => $request->subscription_user_id,
             ]);
         }
 
@@ -53,10 +49,12 @@ class PostTagController extends Controller
             $parameters = $query["query_parameters"];
         }
 
-        if ($request->has('tag_id') && $request->has('post_id')) {
-            $posts = PostTag::where('tag_id', $request->tag_id)->where('post_id', $request->post_id)->get();
+        $user_id = $request->user()->id;
+
+        if ($request->has('subscription_user_id')) {
+            $posts = UserSubscription::where('subscription_user_id', $request->subscription_user_id)->where('user_id', $user_id)->get();
             for ($i = 0; $i < count($posts); $i++) {
-                PostTag::destroy($posts[$i]->id);
+                UserSubscription::destroy($posts[$i]->id);
             }
         }
 

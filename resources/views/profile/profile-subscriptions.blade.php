@@ -12,10 +12,7 @@
     <div class="flex flex-wrap" style="gap: 1rem;">
 
         @foreach($user->user_subscriptions as $subscription)
-            <div class="p-4" style="width: 23rem;cursor: pointer;border-radius: .5rem;box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5), -1px -1px 4px rgba(255, 255, 255, 0.1);">
-                <div><span>Имя: </span><span>{{ $subscription->name }} </span></div>
-                <div><span>Email: </span><span>{{ $subscription->email }}</span></div>
-            </div>
+            <x-user-card :user="$subscription" :width="'23rem'" :redirect_to="'profile.edit'"/>
         @endforeach
 
     </div>
