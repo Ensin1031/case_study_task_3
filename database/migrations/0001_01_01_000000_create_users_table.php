@@ -39,11 +39,6 @@ return new class extends Migration
             $table->integer('last_activity')->index();
         });
 
-        $user = new User();
-        $user->name = 'admin';
-        $user->password = Hash::make('admin');
-        $user->email = 'admin@admin.ru';
-        $user->save();
     }
 
     /**
