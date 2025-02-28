@@ -8,8 +8,8 @@
 Кейс-задача № 3  "Приложение для блога"           
 
 Для запуска проекта необходимо:          
-    1. установить локально **php** - https://www.php.net/, **compocer** - https://getcomposer.org/                 
-    2. скачать содержимое git-репозитория: git clone https://github.com/Ensin1031/case_study_task_3.git                 
+    1. установить локально [php](https://www.php.net/), [compocer](https://getcomposer.org/)             
+    2. скачать содержимое git-репозитория: **git clone https://github.com/Ensin1031/case_study_task_3.git**                 
     3. установить окружение  **npm install && npm run build**                   
     4. запустить проект **composer run dev**               
     
